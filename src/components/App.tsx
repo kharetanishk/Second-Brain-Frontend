@@ -1,7 +1,11 @@
 import { Plusicon } from "../icons/Plusicon";
 import Button from "./ui/Button";
+import { Cards } from "./ui/Cards";
 
 function App() {
+  {
+    /*testing*/
+  }
   return (
     <>
       <div>
@@ -20,9 +24,27 @@ function App() {
         <Button
           variant="primary"
           size="lg"
-          text="HELLO"
+          text="Add Content"
           startIcon={<Plusicon size="lg" />}
           onclick={() => alert("HEllo world")}
+        />
+        <Cards
+          id="1"
+          title="My YouTube Video"
+          type="video"
+          link={{ url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" }}
+          tags={["video", "music", "fun"]}
+          onDelete={() => alert("Delete clicked")}
+          onShare={() => alert("Share clicked")}
+        />
+        <Cards
+          id="2"
+          title="Sample Image"
+          type="image"
+          link={{ url: "https://picsum.photos/300" }}
+          tags={["random", "nature", "sample"]}
+          onDelete={() => alert("Delete clicked")}
+          onShare={() => alert("Share clicked")}
         />
       </div>
     </>

@@ -12,15 +12,17 @@ export interface ButtonPropsType {
 }
 
 const variantStyles: Record<VariantStyles, string> = {
-  primary: "bg-blue-600 text-white hover:bg-blue-700",
-  secondary: "border border-blue-600 text-blue-600 hover:bg-blue-50",
+  primary:
+    "bg-blue-600 text-white hover:bg-blue-800 shadow-md hover:shadow-lg cursor-pointer",
+  secondary:
+    " border-blue-800 text-blue-700 hover:bg-blue-50 hover:shadow-sm cursor-pointer font-medium",
 };
-const defaultStyles = "rounded-[10px] flex";
+const defaultStyles = "rounded-[6px] flex font-roboto w-fit ";
 
 const sizeStyles: Record<ButtonPropsType["size"], string> = {
-  sm: "px-3 py-1 text-sm",
-  md: "px-4 py-2 text-base",
-  lg: "px-5 py-3 text-lg",
+  sm: "px-2 py-1 text-sm",
+  md: "px-2.5 py-1.5 text-base",
+  lg: "px-3 py-2 text-lg",
 };
 
 const Button = (props: ButtonPropsType) => {
@@ -31,8 +33,8 @@ const Button = (props: ButtonPropsType) => {
           sizeStyles[props.size]
         } ${defaultStyles}`}
       >
-        {props.startIcon ? <div className="pr-2">{props.startIcon}</div> : null}{" "}
-        {props.text}
+        {props.startIcon ? <div className="pr-1">{props.startIcon}</div> : null}{" "}
+        <span>{props.text}</span>
       </button>
     </>
   );
