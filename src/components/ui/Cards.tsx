@@ -67,20 +67,20 @@ export const Cards = (props: CardProps) => {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-4 space-y-3 border w-full max-w-[300px] min-h-[370px] flex flex-col justify-between">
+    <div className="bg-white  shadow-md rounded-xl p-4 space-y-3 border w-full max-w-[300px] min-h-[370px] flex flex-col justify-between ">
       <div>
         <div className="flex items-center justify-between mb-2">
           <h2 className="font-semibold text-lg">{props.title}</h2>
           <div className="flex gap-2">
             <button
               onClick={props.onShare}
-              className="text-black hover:text-green-800"
+              className="text-black hover:text-green-800 cursor-pointer"
             >
               <Share2 size="size-5" />
             </button>
             <button
               onClick={props.onDelete}
-              className="text-black-500 hover:text-red-700"
+              className="text-black-500 hover:text-red-700 cursor-pointer"
             >
               <Trash2 size="size-5" />
             </button>
