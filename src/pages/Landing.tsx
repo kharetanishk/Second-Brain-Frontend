@@ -35,7 +35,7 @@ const Landing = () => {
           </Link>
           <Link
             to="/register"
-            className="bg-blue-600 text-base md:text-2xl hover:bg-green-600 text-white px-4 py-2 rounded-xl transition font-medium"
+            className="bg-blue-600 text-base md:text-2xl hover:bg-blue-800 text-white px-4 py-2 rounded-xl transition font-medium"
           >
             Sign Up
           </Link>
