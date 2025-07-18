@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSetRecoilState } from "recoil";
-import { userAtom } from "../states/atoms";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -12,7 +11,7 @@ const Register = () => {
     password: "",
   });
   const [error, setError] = useState("");
-  const setUser = useSetRecoilState(userAtom);
+  const { setUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,6 +24,31 @@ const Register = () => {
   };
 
   const handleRegister = async () => {
+    const { username, email, password } = formData;
+
+    // Frontend validations
+    if (!username.trim() || !email.trim() || !password.trim()) {
+      setError("All fields are required");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
+    if (username.length < 3) {
+      setError("Username must be at least 3 characters");
+      return;
+    }
+
+    console.log("handleregisterhit");
     try {
       console.log("datareq");
       const res = await axios.post(
@@ -36,7 +60,7 @@ const Register = () => {
       );
       console.log("datasend");
       console.log(res.data);
-      setUser(res.data.user);
+      setUser(res.data.user); //setup the context
       navigate("/dashboard");
     } catch (err: any) {
       console.log(err.res);
@@ -94,13 +118,31 @@ const Register = () => {
         </AnimatePresence>
 
         <motion.button
-          onClick={() => handleRegister}
+          onClick={handleRegister}
+          disabled={
+            !formData.username.trim() ||
+            !formData.email.trim() ||
+            !formData.password.trim()
+          }
           whileTap={{ scale: 0.95 }}
-          whileHover={{
-            scale: 1.02,
-            boxShadow: "0px 0px 12px rgba(59,130,246,0.6)",
-          }}
-          className="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold transition"
+          whileHover={
+            !formData.username.trim() ||
+            !formData.email.trim() ||
+            !formData.password.trim()
+              ? {}
+              : {
+                  scale: 1.02,
+                  boxShadow: "0px 0px 12px rgba(59,130,246,0.6)",
+                }
+          }
+          className={`w-full p-3 rounded-lg font-semibold transition 
+    ${
+      !formData.username.trim() ||
+      !formData.email.trim() ||
+      !formData.password.trim()
+        ? "bg-blue-300 cursor-not-allowed text-black line-through decoration-white"
+        : "bg-blue-600 text-white hover:bg-blue-700"
+    }`}
         >
           Sign Up
         </motion.button>
