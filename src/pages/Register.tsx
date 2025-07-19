@@ -48,7 +48,6 @@ const Register = () => {
       return;
     }
 
-    console.log("handleregisterhit");
     try {
       console.log("datareq");
       const res = await axios.post(
@@ -58,8 +57,7 @@ const Register = () => {
           withCredentials: true,
         }
       );
-      console.log("datasend");
-      console.log(res.data);
+
       setUser(res.data.user); //setup the context
       navigate("/dashboard");
     } catch (err: any) {

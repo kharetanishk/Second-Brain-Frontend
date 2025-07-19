@@ -10,13 +10,17 @@ const Login = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const [resMessage, setResMessage] = useState("");
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setTimeout(() => setError(""), 2000);
+    const timer = setTimeout(() => {
+      setError("");
+      setResMessage("");
+    }, 2000);
     return () => clearTimeout(timer);
-  }, [error]);
+  }, [error, resMessage]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,12 +35,12 @@ const Login = () => {
           withCredentials: true,
         }
       );
-
+      setResMessage(res.data.message || "Operation successful");
       setUser(res.data.user);
 
       navigate("/dashboard");
     } catch (err: any) {
-      console.error(err);
+      console.error(err.response.data);
       setError(err.response?.data?.message || "Login failed");
     }
   };
@@ -74,16 +78,18 @@ const Login = () => {
         ))}
 
         <AnimatePresence>
-          {error && (
+          {(error || resMessage) && (
             <motion.p
-              key="error-message"
+              key={error ? "error-message" : "success-message"}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
-              className="text-red-500 mb-3 text-sm"
+              className={`mb-3 text-sm ${
+                error ? "text-red-500" : "text-green-600"
+              }`}
             >
-              {error}
+              {error || resMessage}
             </motion.p>
           )}
         </AnimatePresence>
