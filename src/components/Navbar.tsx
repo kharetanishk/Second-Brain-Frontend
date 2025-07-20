@@ -2,6 +2,7 @@ import brainLogo from "../assets/brain-logo.png";
 import { motion } from "framer-motion";
 import { AddButton } from "./Addbutton";
 import { Menu } from "./Menu";
+import { ShareToggleButton } from "./Sharebraintoggle";
 
 interface NavbarProps {
   username: string;
@@ -38,6 +39,9 @@ export const Navbar = ({
       </div>
 
       <div className="hidden md:flex items-center gap-4 p-1.5">
+        <span className="hidden md:block cursor-pointer">
+          <ShareToggleButton />
+        </span>
         <span
           onClick={onAddContent}
           className="bg-blue-600 text-white p-2 rounded-full shadow-lg cursor-pointer"

@@ -1,6 +1,7 @@
 import { motion, type Variants } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import { Close } from "./Close";
+import { ShareToggleButton } from "./Sharebraintoggle";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -65,7 +66,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               </button>
             </div>
             <ul className="space-y-4 text-blue-900 font-semibold">
-              <li className="hover:text-purple-700 transition">Dashboard</li>
+              <li className="hover:text-purple-700 transition">Nothing</li>
               <li className="hover:text-purple-700 transition">Content</li>
               <li className="hover:text-purple-700 transition">Settings</li>
             </ul>

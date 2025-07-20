@@ -7,6 +7,9 @@ import { Navigate } from "react-router-dom";
 import { AddButton } from "../components/Addbutton";
 import axios from "axios";
 import { Cards } from "../components/ui/Cards";
+import { ShareToggleButton } from "../components/Sharebraintoggle";
+
+// ShareButton now moved out of ShareToggleButton for mobile use
 
 type Content = {
   _id: string;
@@ -98,8 +101,9 @@ const Dashboard = () => {
         />
       )}
 
-      {/* Mobile Floating Button */}
-      <div className="md:hidden fixed bottom-6 right-6 z-50">
+      {/* Mobile Floating Buttons */}
+      <div className="md:hidden fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+        <ShareToggleButton />
         <button
           onClick={() => setShowAddForm(true)}
           className="bg-blue-600 p-4 rounded-full shadow-lg text-white hover:bg-blue-700 transition"

@@ -14,12 +14,15 @@
     "@tailwindcss/vite": "^4.1.11",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.10.0",
+    "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "framer-motion": "^12.23.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.3",
     "recoil": "^0.7.7",
+    "sonner": "^2.0.6",
+    "tailwind-variants": "^1.0.0",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
