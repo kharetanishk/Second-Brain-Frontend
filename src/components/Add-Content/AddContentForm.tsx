@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Close } from "../Close";
 import { AddButton } from "../Addbutton";
 
+
 interface AddContentFormProps {
   onClose: () => void;
   onSuccess: (newContent: any) => void;

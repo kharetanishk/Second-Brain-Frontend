@@ -1,6 +1,9 @@
 import { Share2 } from "../../icons/Shareicon";
 import { Trash2 } from "../../icons/Trashicon";
 import { TwitterEmbed } from "../Tweetframe";
+import { CheckCircle } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type ContentType =
   | "youtube"
@@ -32,6 +35,21 @@ export const Cards = ({
   onShare,
 }: CardProps) => {
   const url = link?.url;
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyLink = async () => {
+    if (!url || typeof url !== "string") return;
+
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500); // Hide after 1.5 seconds
+    } catch (err) {
+      console.error("❌ Failed to copy:", err);
+      alert("Failed to copy the link. Try manually.");
+    }
+  };
+
   const previewWrapperClass =
     "w-full aspect-video rounded-md overflow-hidden bg-gray-100";
 
@@ -41,7 +59,6 @@ export const Cards = ({
         <div className="text-sm text-gray-400 italic">No link provided</div>
       );
 
-    // YouTube or Video
     if (
       (type === "youtube" || type === "video") &&
       (url.includes("youtube.com") || url.includes("youtu.be"))
@@ -64,7 +81,6 @@ export const Cards = ({
       );
     }
 
-    // Twitter
     if (type === "twitter") {
       return (
         <div className={previewWrapperClass}>
@@ -73,7 +89,6 @@ export const Cards = ({
       );
     }
 
-    // Image
     if (type === "image") {
       return (
         <div className={previewWrapperClass}>
@@ -86,7 +101,6 @@ export const Cards = ({
       );
     }
 
-    // PDF
     if (type === "pdf") {
       return (
         <div className="text-sm border p-3 rounded-md text-center bg-gray-50">
@@ -103,7 +117,6 @@ export const Cards = ({
       );
     }
 
-    // Article
     if (type === "article") {
       return (
         <div className="text-sm border p-3 rounded-md bg-gray-50 text-center">
@@ -132,17 +145,35 @@ export const Cards = ({
       <div>
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-lg truncate">{title}</h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center relative">
             <button
-              onClick={onShare}
-              className="text-blue-500 hover:text-green-600"
-              title="Share"
+              onClick={handleCopyLink}
+              className="text-blue-500 hover:text-green-600 cursor-pointer"
+              title="Copy Link"
             >
               <Share2 size="size-5" />
             </button>
+
+            <AnimatePresence>
+              {copied && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute top-8 left-1/2 -translate-x-1/2 bg-green-100 text-green-700 text-xs sm:text-sm px-3 py-1 rounded-md shadow-md z-10 whitespace-nowrap"
+                >
+                  <div className="flex items-center gap-1">
+                    <CheckCircle size={14} className="text-green-600" />
+                    Link copied!
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <button
               onClick={onDelete}
-              className="text-gray-600 hover:text-red-600"
+              className="text-gray-600 hover:text-red-600 cursor-pointer"
               title="Delete"
             >
               <Trash2 size="size-5" />
