@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { Spinner } from "../components/ui/Spinner";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const [resMessage, setResMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
@@ -27,6 +29,7 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       const res = await axios.post(
         "http://localhost:1601/api/auth/login",
@@ -37,11 +40,12 @@ const Login = () => {
       );
       setResMessage(res.data.message || "Operation successful");
       setUser(res.data.user);
-
       navigate("/dashboard");
     } catch (err: any) {
-      console.error(err.response.data);
+      console.error(err.response?.data);
       setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,24 +100,50 @@ const Login = () => {
 
         <motion.button
           onClick={handleLogin}
-          disabled={!formData.email.trim() || !formData.password.trim()}
+          disabled={
+            !formData.email.trim() || !formData.password.trim() || loading
+          }
           whileTap={{ scale: 0.95 }}
           whileHover={
-            !formData.email.trim() || !formData.password.trim()
+            !formData.email.trim() || !formData.password.trim() || loading
               ? {}
               : {
                   scale: 1.02,
                   boxShadow: "0px 0px 12px rgba(59,130,246,0.6)",
                 }
           }
-          className={`w-full p-3 rounded-lg font-semibold transition 
-    ${
-      !formData.email.trim() || !formData.password.trim()
-        ? "bg-blue-300 cursor-not-allowed text-black line-through decoration-white"
-        : "bg-blue-600 text-white hover:bg-blue-700"
-    }`}
+          className={`w-full p-3 rounded-lg font-semibold transition flex justify-center items-center gap-2
+            ${
+              !formData.email.trim() || !formData.password.trim()
+                ? "bg-blue-300 cursor-not-allowed text-black line-through decoration-white"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            } ${loading ? "opacity-70 cursor-wait" : ""}`}
         >
-          Login
+          <AnimatePresence mode="wait" initial={false}>
+            {loading ? (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center gap-2"
+              >
+                <Spinner />
+                <span>Logging in...</span>
+              </motion.div>
+            ) : (
+              <motion.span
+                key="text"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+              >
+                Login
+              </motion.span>
+            )}
+          </AnimatePresence>
         </motion.button>
       </motion.div>
     </div>

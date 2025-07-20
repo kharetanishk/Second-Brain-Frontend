@@ -18,7 +18,7 @@ export const LogoutButton = () => {
       );
 
       toast.success("👋 Logged out successfully");
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
       toast.error("❌ Something went wrong during logout");

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Spinner } from "../components/ui/Spinner";
 
 const Register = () => {
   const [formData, setformData] = useState({
@@ -11,6 +12,7 @@ const Register = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
@@ -26,7 +28,7 @@ const Register = () => {
   const handleRegister = async () => {
     const { username, email, password } = formData;
 
-    // Frontend validations
+    // Validations
     if (!username.trim() || !email.trim() || !password.trim()) {
       setError("All fields are required");
       return;
@@ -48,21 +50,20 @@ const Register = () => {
       return;
     }
 
+    setLoading(true);
     try {
-      console.log("datareq");
       const res = await axios.post(
         "http://localhost:1601/api/auth/signup",
         formData,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
-      setUser(res.data.user); //setup the context
+      setUser(res.data.user);
       navigate("/dashboard");
     } catch (err: any) {
-      console.log(err.res);
       setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,7 +84,6 @@ const Register = () => {
           Create your Second Brain
         </motion.h1>
 
-        {/* Staggered Input Fields */}
         {["username", "email", "password"].map((field, i) => (
           <motion.input
             key={field}
@@ -99,7 +99,6 @@ const Register = () => {
           />
         ))}
 
-        {/* Error Animation */}
         <AnimatePresence>
           {error && (
             <motion.p
@@ -120,29 +119,55 @@ const Register = () => {
           disabled={
             !formData.username.trim() ||
             !formData.email.trim() ||
-            !formData.password.trim()
+            !formData.password.trim() ||
+            loading
           }
           whileTap={{ scale: 0.95 }}
           whileHover={
             !formData.username.trim() ||
             !formData.email.trim() ||
-            !formData.password.trim()
+            !formData.password.trim() ||
+            loading
               ? {}
               : {
                   scale: 1.02,
                   boxShadow: "0px 0px 12px rgba(59,130,246,0.6)",
                 }
           }
-          className={`w-full p-3 rounded-lg font-semibold transition 
-    ${
-      !formData.username.trim() ||
-      !formData.email.trim() ||
-      !formData.password.trim()
-        ? "bg-blue-300 cursor-not-allowed text-black line-through decoration-white"
-        : "bg-blue-600 text-white hover:bg-blue-700"
-    }`}
+          className={`w-full p-3 rounded-lg font-semibold transition flex justify-center items-center gap-2
+            ${
+              !formData.username.trim() ||
+              !formData.email.trim() ||
+              !formData.password.trim()
+                ? "bg-blue-300 cursor-not-allowed text-black line-through decoration-white"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            } ${loading ? "opacity-70 cursor-wait" : ""}`}
         >
-          Sign Up
+          <AnimatePresence mode="wait" initial={false}>
+            {loading ? (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center gap-2"
+              >
+                <Spinner />
+                <span>Signing up...</span>
+              </motion.div>
+            ) : (
+              <motion.span
+                key="text"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+              >
+                Sign Up
+              </motion.span>
+            )}
+          </AnimatePresence>
         </motion.button>
       </motion.div>
     </div>

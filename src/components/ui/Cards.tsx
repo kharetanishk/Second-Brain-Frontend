@@ -22,7 +22,6 @@ export interface CardProps {
   };
   tags?: string[];
   onDelete: () => void;
-  onShare: () => void;
 }
 
 export const Cards = ({
@@ -32,7 +31,6 @@ export const Cards = ({
   link,
   tags = [],
   onDelete,
-  onShare,
 }: CardProps) => {
   const url = link?.url;
   const [copied, setCopied] = useState(false);

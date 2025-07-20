@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Close } from "../Close";
 import { AddButton } from "../Addbutton";
 
-
 interface AddContentFormProps {
   onClose: () => void;
   onSuccess: (newContent: any) => void;
@@ -31,13 +30,11 @@ export const AddContentForm = ({ onClose, onSuccess }: AddContentFormProps) => {
   };
 
   const handleAddTag = () => {
-    if (
-      formData.tagInput.trim() &&
-      !formData.tags.includes(formData.tagInput.trim())
-    ) {
+    const trimmed = formData.tagInput.trim();
+    if (trimmed && !formData.tags.includes(trimmed)) {
       setFormData({
         ...formData,
-        tags: [...formData.tags, formData.tagInput.trim()],
+        tags: [...formData.tags, trimmed],
         tagInput: "",
       });
     }
@@ -58,7 +55,6 @@ export const AddContentForm = ({ onClose, onSuccess }: AddContentFormProps) => {
         link: { url: formData.link },
         tags: formData.tags,
       };
-      console.log(`payload being sent ${JSON.stringify(payload, null, 2)}`);
       const res = await axios.post(
         "http://localhost:1601/api/content",
         payload,
@@ -90,102 +86,122 @@ export const AddContentForm = ({ onClose, onSuccess }: AddContentFormProps) => {
           transition={{ type: "spring", stiffness: 120 }}
           className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl"
         >
-          <h2 className="text-xl font-bold text-blue-700 mb-4 text-center ">
-            Add New Content
-          </h2>
+          {loading ? (
+            <div className="space-y-4 animate-pulse">
+              <div className="h-6 bg-gray-200 rounded w-1/2 mx-auto" />
+              <div className="h-10 bg-gray-200 rounded" />
+              <div className="h-10 bg-gray-200 rounded" />
+              <div className="h-10 bg-gray-200 rounded" />
+              <div className="h-10 bg-gray-200 rounded w-2/3" />
+              <div className="flex gap-2">
+                <div className="h-8 bg-gray-200 rounded-full w-16" />
+                <div className="h-8 bg-gray-200 rounded-full w-20" />
+              </div>
+              <div className="flex justify-between mt-4">
+                <div className="h-10 w-20 bg-gray-200 rounded" />
+                <div className="h-10 w-24 bg-gray-200 rounded" />
+              </div>
+            </div>
+          ) : (
+            <>
+              <h2 className="text-xl font-bold text-blue-700 mb-4 text-center">
+                Add New Content
+              </h2>
 
-          <input
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            placeholder="Title"
-            className="w-full mb-3 border p-2 rounded"
-          />
+              <input
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Title"
+                className="w-full mb-3 border p-2 rounded"
+              />
 
-          <select
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-            className="w-full mb-3 border p-2 rounded text-gray-700"
-          >
-            <option value="" disabled hidden>
-              Type
-            </option>
-            {contentTypes.map((type) => (
-              <option key={type} value={type}>
-                {type.charAt(0).toUpperCase() + type.slice(1)}
-              </option>
-            ))}
-          </select>
-
-          <input
-            name="link"
-            value={formData.link}
-            onChange={handleChange}
-            placeholder="Link"
-            className="w-full mb-3 border p-2 rounded"
-          />
-
-          <div className="flex items-center gap-2 mb-3">
-            <input
-              value={formData.tagInput}
-              onChange={(e) =>
-                setFormData({ ...formData, tagInput: e.target.value })
-              }
-              placeholder="Add tag"
-              className="flex-1 border p-2 rounded"
-            />
-            <button
-              onClick={handleAddTag}
-              className="bg-blue-600 text-white    px-1 py-2 rounded hover:bg-blue-700 cursor-pointer"
-            >
-              <AddButton size="size-5" />
-            </button>
-          </div>
-
-          <div className="flex flex-wrap gap-2 mb-3 ">
-            {formData.tags.map((tag, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-800"
+              <select
+                name="type"
+                value={formData.type}
+                onChange={handleChange}
+                className="w-full mb-3 border p-2 rounded text-gray-700"
               >
-                #{tag}
-                <button
-                  onClick={() =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      tags: prev.tags.filter((t) => t !== tag),
-                    }))
+                <option value="" disabled hidden>
+                  Type
+                </option>
+                {contentTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                name="link"
+                value={formData.link}
+                onChange={handleChange}
+                placeholder="Link"
+                className="w-full mb-3 border p-2 rounded"
+              />
+
+              <div className="flex items-center gap-2 mb-3">
+                <input
+                  value={formData.tagInput}
+                  onChange={(e) =>
+                    setFormData({ ...formData, tagInput: e.target.value })
                   }
-                  className="ml-1 text-gray-500 hover:text-red-500 font-bold"
+                  placeholder="Add tag"
+                  className="flex-1 border p-2 rounded"
+                />
+                <button
+                  onClick={handleAddTag}
+                  className="bg-blue-600 text-white px-1 py-2 rounded hover:bg-blue-700 cursor-pointer"
                 >
-                  <div className="bg-red-500 rounded-full cursor-pointer">
-                    <span className="text-white cursor-pointer ">
-                      <Close size="size-3" />
-                    </span>
-                  </div>
+                  <AddButton size="size-5" />
                 </button>
               </div>
-            ))}
-          </div>
 
-          {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+              <div className="flex flex-wrap gap-2 mb-3">
+                {formData.tags.map((tag, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-800"
+                  >
+                    #{tag}
+                    <button
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          tags: prev.tags.filter((t) => t !== tag),
+                        }))
+                      }
+                      className="ml-1 text-gray-500 hover:text-red-500 font-bold"
+                    >
+                      <div className="bg-red-500 rounded-full cursor-pointer">
+                        <span className="text-white">
+                          <Close size="size-3" />
+                        </span>
+                      </div>
+                    </button>
+                  </div>
+                ))}
+              </div>
 
-          <div className="flex justify-between">
-            <button
-              onClick={onClose}
-              className="text-gray-500 font-semibold hover:text-red-500 cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              disabled={loading}
-              onClick={handleSubmit}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
-            >
-              {loading ? "Adding..." : "Add Content"}
-            </button>
-          </div>
+              {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+
+              <div className="flex justify-between">
+                <button
+                  onClick={onClose}
+                  className="text-gray-500 font-semibold hover:text-red-500 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  disabled={loading}
+                  onClick={handleSubmit}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+                >
+                  {loading ? "Adding..." : "Add Content"}
+                </button>
+              </div>
+            </>
+          )}
         </motion.div>
       </motion.div>
     </AnimatePresence>

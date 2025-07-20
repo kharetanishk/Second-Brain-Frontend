@@ -8,6 +8,8 @@ import { AddButton } from "../components/Addbutton";
 import axios from "axios";
 import { Cards } from "../components/ui/Cards";
 import { ShareToggleButton } from "../components/Sharebraintoggle";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 // ShareButton now moved out of ShareToggleButton for mobile use
 
@@ -24,17 +26,21 @@ const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [contentList, setContentList] = useState<Content[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!user) return <Navigate to="/login" />;
+  if (!user) return <Navigate to="/" />;
 
   const fetchContent = async () => {
     try {
+      setLoading(true);
       const res = await axios.get("http://localhost:1601/api/content", {
         withCredentials: true,
       });
-      setContentList(res.data.contents); // Fix: use `contents` array
+      setContentList(res.data.contents);
     } catch (err) {
       console.error("Failed to fetch content", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,7 +49,6 @@ const Dashboard = () => {
   }, []);
 
   const handleAddSuccess = (newContent: Content) => {
-    console.log("New content added:", newContent);
     setContentList((prev) => [newContent, ...prev]);
     setShowAddForm(false);
   };
@@ -74,7 +79,21 @@ const Dashboard = () => {
         />
 
         <div className="p-4 flex flex-wrap gap-4 justify-start overflow-y-auto">
-          {contentList.length > 0 ? (
+          {loading ? (
+            Array.from({ length: 6 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="bg-white border shadow-md rounded-xl p-4 w-full max-w-sm min-h-[370px]"
+              >
+                <Skeleton height={20} width={150} className="mb-4" />
+                <Skeleton height={200} className="mb-4" />
+                <div className="flex gap-2">
+                  <Skeleton height={20} width={60} />
+                  <Skeleton height={20} width={50} />
+                </div>
+              </div>
+            ))
+          ) : contentList.length > 0 ? (
             contentList.map((content) => (
               <Cards
                 key={content._id}
@@ -84,7 +103,6 @@ const Dashboard = () => {
                 link={content.link}
                 tags={content.tags?.map((t) => t.title) || []}
                 onDelete={() => handleDelete(content._id)}
-                onShare={() => {}}
               />
             ))
           ) : (
@@ -93,7 +111,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Add Content Form */}
       {showAddForm && (
         <AddContentForm
           onClose={() => setShowAddForm(false)}
@@ -101,7 +118,6 @@ const Dashboard = () => {
         />
       )}
 
-      {/* Mobile Floating Buttons */}
       <div className="md:hidden fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
         <ShareToggleButton />
         <button
