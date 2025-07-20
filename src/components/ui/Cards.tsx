@@ -1,13 +1,20 @@
 import { Share2 } from "../../icons/Shareicon";
 import { Trash2 } from "../../icons/Trashicon";
+import { TwitterEmbed } from "../Tweetframe";
 
-type ContentType = "article" | "image" | "video" | "pdf";
+type ContentType =
+  | "youtube"
+  | "twitter"
+  | "article"
+  | "image"
+  | "video"
+  | "pdf";
 
 export interface CardProps {
-  id: string;
+  _id: string;
   title: string;
   type: ContentType;
-  link?: {
+  link: {
     url: string;
   };
   tags?: string[];
@@ -15,87 +22,145 @@ export interface CardProps {
   onShare: () => void;
 }
 
-export const Cards = (props: CardProps) => {
+export const Cards = ({
+  _id,
+  title,
+  type,
+  link,
+  tags = [],
+  onDelete,
+  onShare,
+}: CardProps) => {
+  const url = link?.url;
+  const previewWrapperClass =
+    "w-full aspect-video rounded-md overflow-hidden bg-gray-100";
+
   const renderPreview = () => {
-    const url = props.link?.url;
-    if (!url) {
-      return <div className="text-sm text-gray-500">No link provided</div>;
-    }
+    if (!url)
+      return (
+        <div className="text-sm text-gray-400 italic">No link provided</div>
+      );
 
-    const previewWrapperClass = "w-full h-52 rounded-md overflow-hidden";
-
-    if (props.type === "video" && url.includes("youtube.com")) {
-      const videoId = new URL(url).searchParams.get("v");
+    // YouTube or Video
+    if (
+      (type === "youtube" || type === "video") &&
+      (url.includes("youtube.com") || url.includes("youtu.be"))
+    ) {
+      let videoId = "";
+      if (url.includes("youtu.be")) {
+        videoId = url.split("youtu.be/")[1]?.split("?")[0];
+      } else {
+        videoId = new URL(url).searchParams.get("v") || "";
+      }
       return (
         <div className={previewWrapperClass}>
           <iframe
             src={`https://www.youtube.com/embed/${videoId}`}
             className="w-full h-full"
             allowFullScreen
+            title="YouTube Preview"
           />
         </div>
       );
     }
 
-    if (props.type === "image") {
+    // Twitter
+    if (type === "twitter") {
       return (
         <div className={previewWrapperClass}>
-          <img src={url} alt="preview" className="w-full h-full object-cover" />
+          <TwitterEmbed tweetUrl={url} />
         </div>
       );
     }
 
-    if (props.type === "pdf") {
+    // Image
+    if (type === "image") {
       return (
         <div className={previewWrapperClass}>
-          <iframe src={url} className="w-full h-full" title="PDF preview" />
+          <img
+            src={url}
+            alt="Image Preview"
+            className="w-full h-full object-contain"
+          />
         </div>
       );
     }
 
-    if (props.type === "article") {
+    // PDF
+    if (type === "pdf") {
       return (
-        <div className="text-sm text-gray-700 border p-3 rounded-md">
-          <a href={url} target="_blank" className="underline">
+        <div className="text-sm border p-3 rounded-md text-center bg-gray-50">
+          <p className="mb-2 text-gray-700">PDF Document</p>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline text-sm"
+          >
+            Open PDF
+          </a>
+        </div>
+      );
+    }
+
+    // Article
+    if (type === "article") {
+      return (
+        <div className="text-sm border p-3 rounded-md bg-gray-50 text-center">
+          <p className="mb-2 text-gray-700">Article</p>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline text-sm"
+          >
             View Article
           </a>
         </div>
       );
     }
 
-    return <div className="text-sm text-gray-500">Unsupported content</div>;
+    return (
+      <div className="text-sm text-gray-400 italic">
+        Unsupported content type
+      </div>
+    );
   };
 
   return (
-    <div className="bg-white  shadow-md rounded-xl p-4 space-y-3 border w-full max-w-[300px] min-h-[370px] flex flex-col justify-between ">
+    <div className="bg-white border shadow-md rounded-xl p-4 space-y-4 w-full max-w-sm min-h-[370px] flex flex-col justify-between sm:w-full">
       <div>
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="font-semibold text-lg">{props.title}</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-lg truncate">{title}</h2>
           <div className="flex gap-2">
             <button
-              onClick={props.onShare}
-              className="text-black hover:text-green-800 cursor-pointer"
+              onClick={onShare}
+              className="text-blue-500 hover:text-green-600"
+              title="Share"
             >
               <Share2 size="size-5" />
             </button>
             <button
-              onClick={props.onDelete}
-              className="text-black-500 hover:text-red-700 cursor-pointer"
+              onClick={onDelete}
+              className="text-gray-600 hover:text-red-600"
+              title="Delete"
             >
               <Trash2 size="size-5" />
             </button>
           </div>
         </div>
 
-        <div>{renderPreview()}</div>
+        {/* Preview */}
+        <div className="mt-3">{renderPreview()}</div>
       </div>
 
-      {props.tags && props.tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-3">
-          {props.tags.map((tag, idx) => (
+      {/* Tags */}
+      {tags.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag, idx) => (
             <span
               key={idx}
-              className="bg-gray-200 text-sm text-gray-800 px-2 py-1 rounded-full"
+              className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full"
             >
               #{tag}
             </span>

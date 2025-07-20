@@ -6,9 +6,14 @@ import { Menu } from "./Menu";
 interface NavbarProps {
   username: string;
   onToggleSidebar: () => void;
+  onAddContent: () => void;
 }
 
-export const Navbar = ({ username, onToggleSidebar }: NavbarProps) => {
+export const Navbar = ({
+  username,
+  onToggleSidebar,
+  onAddContent,
+}: NavbarProps) => {
   return (
     <div className="flex justify-between items-center w-full p-2 border-b shadow-sm bg-white">
       <div className="flex items-center md:gap-2 gap-1">
@@ -33,7 +38,10 @@ export const Navbar = ({ username, onToggleSidebar }: NavbarProps) => {
       </div>
 
       <div className="hidden md:flex items-center gap-4 p-1.5">
-        <span className="bg-blue-600 text-white p-2 rounded-full shadow-lg cursor-pointer">
+        <span
+          onClick={onAddContent}
+          className="bg-blue-600 text-white p-2 rounded-full shadow-lg cursor-pointer"
+        >
           <AddButton size="size-8" />
         </span>
         <motion.p

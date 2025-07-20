@@ -1,4 +1,8 @@
-export const Close = () => {
+interface propsType {
+  size: string;
+}
+
+export const Close = (props: propsType) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -6,7 +10,7 @@ export const Close = () => {
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="currentColor"
-      className="size-6"
+      className={props.size}
     >
       <path
         stroke-linecap="round"

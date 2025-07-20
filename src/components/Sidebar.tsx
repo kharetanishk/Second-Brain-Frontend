@@ -54,12 +54,14 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed top-0 left-0 bottom-0 w-64 bg-gradient-to-br from-blue-50 to-purple-100 shadow-2xl border-r border-white/30 z-40 p-4 backdrop-blur-xl"
+            className="fixed top-0 left-0 bottom-0 w-64 bg-gradient-to-br from-blue-50 to-blue-200 shadow-2xl border-r border-white/30 z-40 p-4 backdrop-blur-xl"
           >
             <div className="flex justify-between items-center mb-6">
-              <h1 className="text-lg font-bold text-blue-700">Sidebar</h1>
+              <h1 className="text-lg font-bold text-blue-700">
+                app/brain/v1.0.0
+              </h1>
               <button onClick={onClose} className="md:hidden">
-                <Close />
+                <Close size="size-6" />
               </button>
             </div>
             <ul className="space-y-4 text-blue-900 font-semibold">
