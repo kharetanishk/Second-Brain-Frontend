@@ -8,12 +8,14 @@ interface NavbarProps {
   username: string;
   onToggleSidebar: () => void;
   onAddContent: () => void;
+  readOnly?: boolean;
 }
 
 export const Navbar = ({
   username,
   onToggleSidebar,
   onAddContent,
+  readOnly = false,
 }: NavbarProps) => {
   return (
     <div className="flex justify-between items-center w-full p-2 border-b shadow-sm bg-white">
@@ -38,59 +40,63 @@ export const Navbar = ({
         </h1>
       </div>
 
-      <div className="hidden md:flex items-center gap-4 p-1.5">
-        <span className="hidden md:block cursor-pointer">
-          <ShareToggleButton />
-        </span>
-        <span
-          onClick={onAddContent}
-          className="bg-blue-600 text-white p-2 rounded-full shadow-lg cursor-pointer"
-        >
-          <AddButton size="size-8" />
-        </span>
-        <motion.p
+      {!readOnly && (
+        <div className="hidden md:flex items-center gap-4 p-1.5">
+          <span className="hidden md:block cursor-pointer">
+            <ShareToggleButton />
+          </span>
+          <span
+            onClick={onAddContent}
+            className="bg-blue-600 text-white p-2 rounded-full shadow-lg cursor-pointer"
+          >
+            <AddButton size="size-8" />
+          </span>
+          <motion.p
+            initial={{ x: 10, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+            className="text-sm text-gray-600"
+          >
+            Hi! {username}
+          </motion.p>
+        </div>
+      )}
+
+      {!readOnly && (
+        <motion.div
           initial={{ x: 10, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
-          className="text-sm text-gray-600"
+          className="md:hidden"
         >
-          Hi! {username}
-        </motion.p>
-      </div>
-
-      <motion.div
-        initial={{ x: 10, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
-        className="md:hidden"
-      >
-        <motion.p
-          initial={{
-            y: -100,
-            x: 100,
-            opacity: 0,
-            scale: 0.5,
-            rotate: -30,
-          }}
-          animate={{
-            y: 0,
-            x: 0,
-            opacity: 1,
-            scale: 1,
-            rotate: 0,
-          }}
-          transition={{
-            duration: 0.8,
-            ease: "easeOut",
-            type: "spring",
-            stiffness: 70,
-            delay: 0.3,
-          }}
-          className="text-[10px] text-gray-600"
-        >
-          Hi! {username}
-        </motion.p>
-      </motion.div>
+          <motion.p
+            initial={{
+              y: -100,
+              x: 100,
+              opacity: 0,
+              scale: 0.5,
+              rotate: -30,
+            }}
+            animate={{
+              y: 0,
+              x: 0,
+              opacity: 1,
+              scale: 1,
+              rotate: 0,
+            }}
+            transition={{
+              duration: 0.8,
+              ease: "easeOut",
+              type: "spring",
+              stiffness: 70,
+              delay: 0.3,
+            }}
+            className="text-[10px] text-gray-600"
+          >
+            Hi! {username}
+          </motion.p>
+        </motion.div>
+      )}
     </div>
   );
 };

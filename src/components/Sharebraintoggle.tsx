@@ -5,6 +5,7 @@ import { Copy } from "./Copybutton";
 import { Eye } from "./Eye";
 import { Close } from "./Close";
 import { motion, AnimatePresence } from "framer-motion";
+import { Spinner } from "./ui/Spinner";
 
 export const ShareToggleButton = () => {
   const [isSharing, setIsSharing] = useState(false);
@@ -12,9 +13,11 @@ export const ShareToggleButton = () => {
   const [error, setError] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleToggle = async () => {
     try {
+      setLoading(true);
       const newShareStatus = !isSharing;
       const response = await axios.post(
         "http://localhost:1601/api/brain/share",
@@ -36,6 +39,8 @@ export const ShareToggleButton = () => {
       setError(err.response?.data?.message || "Something went wrong");
       setShareLink("");
       setShowPopup(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -122,7 +127,9 @@ export const ShareToggleButton = () => {
                 ×
               </button>
 
-              {error ? (
+              {loading ? (
+                <Spinner /> // 👈 Loader during API call
+              ) : error ? (
                 <p className="text-red-600 text-sm">{error}</p>
               ) : (
                 <>

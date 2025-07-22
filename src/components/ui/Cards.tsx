@@ -17,11 +17,10 @@ export interface CardProps {
   _id: string;
   title: string;
   type: ContentType;
-  link: {
-    url: string;
-  };
-  tags?: string[];
-  onDelete: () => void;
+  link: { url: string };
+  tags?: { _id: string; title: string }[];
+  onDelete?: () => void; // made optional for readOnly
+  readOnly?: boolean;
 }
 
 export const Cards = ({
@@ -31,17 +30,17 @@ export const Cards = ({
   link,
   tags = [],
   onDelete,
+  readOnly = false,
 }: CardProps) => {
   const url = link?.url;
   const [copied, setCopied] = useState(false);
 
   const handleCopyLink = async () => {
     if (!url || typeof url !== "string") return;
-
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500); // Hide after 1.5 seconds
+      setTimeout(() => setCopied(false), 1500);
     } catch (err) {
       console.error("❌ Failed to copy:", err);
       alert("Failed to copy the link. Try manually.");
@@ -143,55 +142,58 @@ export const Cards = ({
       <div>
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-lg truncate">{title}</h2>
-          <div className="flex gap-2 items-center relative">
-            <button
-              onClick={handleCopyLink}
-              className="text-blue-500 hover:text-green-600 cursor-pointer"
-              title="Copy Link"
-            >
-              <Share2 size="size-5" />
-            </button>
 
-            <AnimatePresence>
-              {copied && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute top-8 left-1/2 -translate-x-1/2 bg-green-100 text-green-700 text-xs sm:text-sm px-3 py-1 rounded-md shadow-md z-10 whitespace-nowrap"
-                >
-                  <div className="flex items-center gap-1">
-                    <CheckCircle size={14} className="text-green-600" />
-                    Link copied!
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+          {/* 🔒 Conditionally render actions */}
+          {!readOnly && (
+            <div className="flex gap-2 items-center relative">
+              <button
+                onClick={handleCopyLink}
+                className="text-blue-500 hover:text-green-600 cursor-pointer"
+                title="Copy Link"
+              >
+                <Share2 size="size-5" />
+              </button>
 
-            <button
-              onClick={onDelete}
-              className="text-gray-600 hover:text-red-600 cursor-pointer"
-              title="Delete"
-            >
-              <Trash2 size="size-5" />
-            </button>
-          </div>
+              <AnimatePresence>
+                {copied && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute top-8 left-1/2 -translate-x-1/2 bg-green-100 text-green-700 text-xs sm:text-sm px-3 py-1 rounded-md shadow-md z-10 whitespace-nowrap"
+                  >
+                    <div className="flex items-center gap-1">
+                      <CheckCircle size={14} className="text-green-600" />
+                      Link copied!
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <button
+                onClick={onDelete}
+                className="text-gray-600 hover:text-red-600 cursor-pointer"
+                title="Delete"
+              >
+                <Trash2 size="size-5" />
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Preview */}
         <div className="mt-3">{renderPreview()}</div>
       </div>
 
       {/* Tags */}
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {tags.map((tag, idx) => (
+          {tags.map((tag) => (
             <span
-              key={idx}
+              key={tag._id}
               className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full"
             >
-              #{tag}
+              #{tag.title}
             </span>
           ))}
         </div>

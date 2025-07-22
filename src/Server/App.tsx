@@ -6,6 +6,7 @@ import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { Fallback } from "../components/Fallback";
+import ShareBrain from "../pages/ShareBrain";
 
 const App = () => {
   return (
@@ -23,6 +24,9 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/brain/:hash" element={<ShareBrain />} />
+
+          {/*fallback route*/}
           <Route path="*" element={<Fallback />} />
         </Routes>
       </AuthProvider>

@@ -1,11 +1,11 @@
-import { motion, type Variants } from "framer-motion";
-import { AnimatePresence } from "framer-motion";
+import { motion, type Variants, AnimatePresence } from "framer-motion";
 import { Close } from "./Close";
 import { LogoutButton } from "./Logout";
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  readOnly?: boolean; // 👈 added
 }
 
 const overlayVariants = {
@@ -36,7 +36,11 @@ const sidebarVariants: Variants = {
   },
 };
 
-export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
+export const Sidebar = ({
+  isOpen,
+  onClose,
+  readOnly = false,
+}: SidebarProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -65,13 +69,16 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 <Close size="size-6" />
               </button>
             </div>
-            <ul className="space-y-4 text-blue-900 font-semibold">
-              <li className="hover:text-purple-700 transition">
-                <LogoutButton />
-              </li>
-              <li className="hover:text-purple-700 transition">Content</li>
-              <li className="hover:text-purple-700 transition">Settings</li>
-            </ul>
+
+            {!readOnly && (
+              <ul className="space-y-4 text-blue-900 font-semibold">
+                <li className="hover:text-purple-700 transition">
+                  <LogoutButton />
+                </li>
+                <li className="hover:text-purple-700 transition">Content</li>
+                <li className="hover:text-purple-700 transition">Settings</li>
+              </ul>
+            )}
           </motion.div>
         </>
       )}

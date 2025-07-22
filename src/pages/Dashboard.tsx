@@ -18,7 +18,7 @@ type Content = {
   title: string;
   type: string;
   link: { url: string };
-  tags?: { title: string }[];
+  tags?: string[];
 };
 
 const Dashboard = () => {
@@ -36,6 +36,7 @@ const Dashboard = () => {
       const res = await axios.get("http://localhost:1601/api/content", {
         withCredentials: true,
       });
+      await new Promise((resolve) => setTimeout(resolve, 5000));
       setContentList(res.data.contents);
     } catch (err) {
       console.error("Failed to fetch content", err);
@@ -101,7 +102,13 @@ const Dashboard = () => {
                 title={content.title}
                 type={content.type as any}
                 link={content.link}
-                tags={content.tags?.map((t) => t.title) || []}
+                tags={
+                  Array.isArray(content.tags)
+                    ? content.tags.map((tag) =>
+                        typeof tag === "string" ? { _id: tag, title: tag } : tag
+                      )
+                    : []
+                }
                 onDelete={() => handleDelete(content._id)}
               />
             ))
