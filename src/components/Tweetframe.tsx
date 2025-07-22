@@ -15,7 +15,7 @@ export const TwitterEmbed = ({ tweetUrl }: TwitterEmbedProps) => {
 
   useEffect(() => {
     // Convert x.com to twitter.com if needed
-    const transformedUrl = tweetUrl.replace("x.com", "twitter.com");
+    tweetUrl.replace("x.com", "twitter.com");
 
     const loadTweet = () => {
       if (!window.twttr) {

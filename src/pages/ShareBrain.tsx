@@ -5,7 +5,6 @@ import axios from "axios";
 import { Cards } from "../components/ui/Cards";
 import { Navbar } from "../components/Navbar";
 import { Sidebar } from "../components/Sidebar";
-import { Spinner } from "../components/ui/Spinner";
 import { Fallback } from "../components/Fallback";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";

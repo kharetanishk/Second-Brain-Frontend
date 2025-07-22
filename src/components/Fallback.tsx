@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Smile, RefreshCw } from "lucide-react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const Fallback = ({ message = "Oops! Something went wrong..." }) => {
   const navigate = useNavigate();
