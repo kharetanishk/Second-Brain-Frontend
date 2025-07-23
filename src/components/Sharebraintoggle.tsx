@@ -7,6 +7,8 @@ import { Close } from "./Close";
 import { motion, AnimatePresence } from "framer-motion";
 import { Spinner } from "./ui/Spinner";
 
+const API_URL = `${import.meta.env.VITE_API_URL}/api/brain/share`;
+
 export const ShareToggleButton = () => {
   const [isSharing, setIsSharing] = useState(false);
   const [shareLink, setShareLink] = useState("");
@@ -20,7 +22,7 @@ export const ShareToggleButton = () => {
       setLoading(true);
       const newShareStatus = !isSharing;
       const response = await axios.post(
-        "http://localhost:1601/api/brain/share",
+        API_URL,
         { share: newShareStatus },
         { withCredentials: true }
       );

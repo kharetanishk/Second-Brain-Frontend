@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { Spinner } from "../components/ui/Spinner";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/auth/login`;
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -31,13 +32,9 @@ const Login = () => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const res = await axios.post(
-        "http://localhost:1601/api/auth/login",
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await axios.post(API_URL, formData, {
+        withCredentials: true,
+      });
       setResMessage(res.data.message || "Operation successful");
       setUser(res.data.user);
       navigate("/dashboard");

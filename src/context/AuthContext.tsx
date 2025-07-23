@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/me`;
 
 interface User {
   id: string;
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   //if user refreshes the page ...
   useEffect(() => {
     axios
-      .get("http://localhost:1601/api/me", { withCredentials: true })
+      .get(API_URL, { withCredentials: true })
       .then((res) => setUser(res.data.user))
       .catch(() => setUser(null))
       .finally(() => setLoading(false));

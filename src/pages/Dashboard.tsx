@@ -11,7 +11,7 @@ import { ShareToggleButton } from "../components/Sharebraintoggle";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-// ShareButton now moved out of ShareToggleButton for mobile use
+const API_URL = `${import.meta.env.VITE_API_URL}/api/content`;
 
 type Content = {
   _id: string;
@@ -33,7 +33,7 @@ const Dashboard = () => {
   const fetchContent = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:1601/api/content", {
+      const res = await axios.get(API_URL, {
         withCredentials: true,
       });
       await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -56,7 +56,7 @@ const Dashboard = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:1601/api/content/${id}`, {
+      await axios.delete(`${API_URL}/${id}`, {
         withCredentials: true,
       });
       setContentList((prev) => prev.filter((c) => c._id !== id));

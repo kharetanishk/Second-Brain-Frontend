@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Spinner } from "../components/ui/Spinner";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/auth/register`;
 
 const Register = () => {
   const [formData, setformData] = useState({
@@ -52,11 +53,9 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post(
-        "http://localhost:1601/api/auth/signup",
-        formData,
-        { withCredentials: true }
-      );
+      const res = await axios.post(API_URL, formData, {
+        withCredentials: true,
+      });
 
       setUser(res.data.user);
       navigate("/dashboard");

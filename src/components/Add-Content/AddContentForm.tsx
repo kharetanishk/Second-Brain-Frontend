@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Close } from "../Close";
 import { AddButton } from "../Addbutton";
 
+const API_URL = `${import.meta.env.VITE_API_URL}/api/content`;
+
 interface AddContentFormProps {
   onClose: () => void;
   onSuccess: (newContent: any) => void;
@@ -55,13 +57,11 @@ export const AddContentForm = ({ onClose, onSuccess }: AddContentFormProps) => {
         link: { url: formData.link },
         tags: formData.tags,
       };
-      const res = await axios.post(
-        "http://localhost:1601/api/content",
-        payload,
-        {
-          withCredentials: true,
-        }
-      );
+
+      const res = await axios.post(API_URL, payload, {
+        withCredentials: true,
+      });
+
       onSuccess(res.data.content);
       onClose();
     } catch (err: any) {

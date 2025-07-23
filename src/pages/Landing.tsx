@@ -44,7 +44,6 @@ const Landing = () => {
 
       {/* Hero Section */}
       <main className="px-4 sm:px-10 py-10 md:py-20 grid grid-cols-1 md:grid-cols-2 items-center max-w-7xl mx-auto gap-10">
-        {/* Left: Animated Text */}
         <motion.div
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -56,8 +55,8 @@ const Landing = () => {
             <span className="text-blue-600">Organized.</span>
           </h2>
           <p className="text-gray-600 text-lg">
-            Collect YouTube videos, notes, images, PDFs and ideas in one place.
-            Built for learners, creators, and curious minds like you.
+            Collect YouTube, tweets, videos, notes, images, PDFs and ideas in
+            one place. Built for learners, creators, and curious minds like you.
           </p>
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -80,7 +79,6 @@ const Landing = () => {
           </motion.div>
         </motion.div>
 
-        {/* Right: Animated Image */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9, rotate: 5 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}

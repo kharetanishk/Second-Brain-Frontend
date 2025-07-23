@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "sonner";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/auth/logout`;
 
 export const LogoutButton = () => {
   const navigate = useNavigate();
@@ -11,11 +12,7 @@ export const LogoutButton = () => {
   const handleLogout = async () => {
     try {
       setLoading(true);
-      await axios.post(
-        "http://localhost:1601/api/auth/logout",
-        {},
-        { withCredentials: true }
-      );
+      await axios.post(API_URL, {}, { withCredentials: true });
 
       toast.success("👋 Logged out successfully");
       navigate("/");
