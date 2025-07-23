@@ -7,7 +7,6 @@ import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { Fallback } from "../components/Fallback";
 import ShareBrain from "../pages/ShareBrain";
-
 const App = () => {
   return (
     <Router>
