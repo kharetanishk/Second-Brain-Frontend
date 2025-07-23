@@ -36,7 +36,6 @@ const Dashboard = () => {
       const res = await axios.get(API_URL, {
         withCredentials: true,
       });
-      await new Promise((resolve) => setTimeout(resolve, 5000));
       setContentList(res.data.contents);
     } catch (err) {
       console.error("Failed to fetch content", err);
