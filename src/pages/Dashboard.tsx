@@ -11,15 +11,9 @@ import { ShareToggleButton } from "../components/Sharebraintoggle";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-const API_URL = `${import.meta.env.VITE_API_URL}/api/content`;
+import type { Content, AllContentResponse } from "../interface/Contentresponse";
 
-type Content = {
-  _id: string;
-  title: string;
-  type: string;
-  link: { url: string };
-  tags?: string[];
-};
+const API_URL = `${import.meta.env.VITE_API_URL}/api/content`;
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -33,7 +27,7 @@ const Dashboard = () => {
   const fetchContent = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(API_URL, {
+      const res = await axios.get<AllContentResponse>(API_URL, {
         withCredentials: true,
       });
       setContentList(res.data.contents);

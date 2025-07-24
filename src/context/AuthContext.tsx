@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import type { UserResponse } from "../interface/Userresponse";
 const API_URL = `${import.meta.env.VITE_API_URL}/api/me`;
 
 interface User {
@@ -24,11 +25,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   //if user refreshes the page ...
   useEffect(() => {
-    axios
-      .get(API_URL, { withCredentials: true })
-      .then((res) => setUser(res.data.user))
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+    (async () => {
+      try {
+        const res = await axios.get<UserResponse>(API_URL, {
+          withCredentials: true,
+        });
+        setUser(res.data.user);
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
   return (

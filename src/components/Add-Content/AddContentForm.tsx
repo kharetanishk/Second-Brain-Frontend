@@ -4,12 +4,13 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Close } from "../Close";
 import { AddButton } from "../Addbutton";
+import type { Content, ContentResponse } from "../../interface/Contentresponse";
 
-const API_URL = `${import.meta.env.VITE_API_URL}/api/content`;
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface AddContentFormProps {
   onClose: () => void;
-  onSuccess: (newContent: any) => void;
+  onSuccess: (newContent: Content) => void;
 }
 
 const contentTypes = ["youtube", "twitter", "pdf", "article", "image", "video"];
@@ -58,9 +59,13 @@ export const AddContentForm = ({ onClose, onSuccess }: AddContentFormProps) => {
         tags: formData.tags,
       };
 
-      const res = await axios.post(API_URL, payload, {
-        withCredentials: true,
-      });
+      const res = await axios.post<ContentResponse>(
+        `${API_URL}/api/content`,
+        payload,
+        {
+          withCredentials: true,
+        }
+      );
 
       onSuccess(res.data.content);
       onClose();

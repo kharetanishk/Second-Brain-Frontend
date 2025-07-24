@@ -6,6 +6,7 @@ import { Eye } from "./Eye";
 import { Close } from "./Close";
 import { motion, AnimatePresence } from "framer-motion";
 import { Spinner } from "./ui/Spinner";
+import type { ShareResponse } from "../interface/Sharebrainresponse";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api/brain/share`;
 
@@ -21,7 +22,7 @@ export const ShareToggleButton = () => {
     try {
       setLoading(true);
       const newShareStatus = !isSharing;
-      const response = await axios.post(
+      const response = await axios.post<ShareResponse>(
         API_URL,
         { share: newShareStatus },
         { withCredentials: true }

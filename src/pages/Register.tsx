@@ -4,7 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Spinner } from "../components/ui/Spinner";
-const API_URL = `${import.meta.env.VITE_API_URL}/api/auth/register`;
+import type { AuthResponse } from "../interface/Authresponse";
+const API_URL = `${import.meta.env.VITE_API_URL}`;
 
 const Register = () => {
   const [formData, setformData] = useState({
@@ -52,14 +53,23 @@ const Register = () => {
     }
 
     setLoading(true);
+    console.log(API_URL);
     try {
-      const res = await axios.post(API_URL, formData, {
-        withCredentials: true,
-      });
-
+      console.log("Post register route is going to hit");
+      console.log(`${API_URL}/api/auth/signup`);
+      const res = await axios.post<AuthResponse>(
+        `${API_URL}/api/auth/signup`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("post register hit success");
       setUser(res.data.user);
       navigate("/dashboard");
     } catch (err: any) {
+      console.log("unable to hit the post register ");
+      console.log(err);
       setError(err.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);

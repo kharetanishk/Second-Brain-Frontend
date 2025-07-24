@@ -8,6 +8,7 @@ import { Sidebar } from "../components/Sidebar";
 import { Fallback } from "../components/Fallback";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import type { ShareBrainResponse } from "../interface/Sharebrainresponse";
 const API_URL = `${import.meta.env.VITE_API_URL}/api/brain`;
 
 interface Content {
@@ -29,7 +30,7 @@ const ShareBrain = () => {
   useEffect(() => {
     const fetchBrain = async () => {
       try {
-        const res = await axios.get(`${API_URL}/${hash}`);
+        const res = await axios.get<ShareBrainResponse>(`${API_URL}/${hash}`);
         setUsername(res.data.username);
         setContents(res.data.contents);
       } catch (err: any) {
