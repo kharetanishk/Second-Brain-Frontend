@@ -117,7 +117,7 @@ const ShareBrain = () => {
           transition={{ duration: 0.5 }}
         >
           <h1 className="md:text-lg text-sm text-blue-600 font-bold">
-            {`Shares Brain of ${username}`}
+            {`Brain of ${username}`}
           </h1>
         </motion.div>
 
